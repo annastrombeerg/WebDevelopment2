@@ -8,10 +8,10 @@
 ini_set('display_errors', 1);
 error_reporting(E_ALL);
 
-// Sätt rätt mime-typ för att säkerställa att svaret är i textformat
+//Sätt rätt mime-typ för att säkerställa att svaret är i textformat
 header('Content-Type: text/plain; charset=UTF-8');
 
-// Kontrollera om några GET-variabler har skickats
+//Kontrollera om några GET-variabler har skickats
 if (count($_GET) > 0) {
     echo "GET-variabler:\n";
     foreach ($_GET as $name => $value) {
@@ -21,9 +21,9 @@ if (count($_GET) > 0) {
     echo "Inga GET-variabler mottogs.\n";
 }
 
-echo "\n";  // Radbrytning mellan GET och POST
+echo "\n";
 
-// Kontrollera om några POST-variabler har skickats
+//Kontrollera om några POST-variabler har skickats
 if (count($_POST) > 0) {
     echo "POST-variabler:\n";
     foreach ($_POST as $name => $value) {

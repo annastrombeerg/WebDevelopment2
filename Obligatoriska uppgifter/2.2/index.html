@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="sv">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <title>Skicka information via formulär</title>
+    </head>
+    <body>
+        <h1>Formulär för att skicka data till PHP</h1>
+
+        <!-- GET-formulär -->
+        <h2>Skicka med GET</h2>
+        <form method="get" action="process.php">
+            <label for="name">Namn:</label>
+            <input type="text" id="name" name="name" value="Anna"><br><br>
+
+            <label for="age">Ålder:</label>
+            <input type="number" id="age" name="age" value="22"><br><br>
+
+            <label for="city">Stad:</label>
+            <input type="text" id="city" name="city" value="Stockholm"><br><br>
+
+            <input type="submit" value="Skicka med GET">
+        </form>
+
+        <br><br>
+
+        <!-- POST-formulär -->
+        <h2>Skicka med POST</h2>
+        <form method="post" action="process.php">
+            <label for="name_post">Namn:</label>
+            <input type="text" id="name_post" name="name_post" value="John"><br><br>
+
+            <label for="age_post">Ålder:</label>
+            <input type="number" id="age_post" name="age_post" value="30"><br><br>
+
+            <label for="city_post">Stad:</label>
+            <input type="text" id="city_post" name="city_post" value="Göteborg"><br><br>
+
+            <input type="submit" value="Skicka med POST">
+        </form>
+    </body>
+</html>

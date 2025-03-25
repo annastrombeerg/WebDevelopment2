@@ -10,18 +10,22 @@ if ($result->num_rows > 0) {
     //Loop igenom alla produkter och visa dem
     while ($product = $result->fetch_assoc()) {
         echo "<div class='product'>";
-        echo "<img src='images/" . $product['image'] . "' alt='" . $product['name'] . "'>";
-        echo "<h3>" . $product['name'] . "</h3>";
-        echo "<p>" . $product['description'] . "</p>";
-        echo "<p>Price: " . $product['price'] . " kr</p>";
-        echo "<a href='add_cart.php?product_id=" . $product['id'] . "'>Add to cart</a>";
+        echo "<h3>" . $product["name"] . "</h3>";
+        echo "<p>" . $product["description"] . "</p>";
+        echo "<p>Price: " . $product["price"] . " kr</p>";
+        
+        //Visa bild från BLOB
+        $image = $product["image"];
+        echo "<img src='data:image/jpeg;base64," . base64_encode($image) . "' alt='" . $product["name"] . "' />";
+        
+        echo "<a href='add_cart.php?product_id=" . $product["id"] . "'>Add to cart</a>";
         echo "</div>";
     }
 } else {
     echo "<p>No products found.</p>";
 }
 
-// Stäng anslutningen
+//Stäng anslutningen
 $conn->close();
 
 ?>

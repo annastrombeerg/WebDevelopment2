@@ -1,0 +1,121 @@
+/* Grundläggande styling för sidan */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+  }
+  
+  /* Styling för header och navigationsbar */
+  header {
+    background-color: #333;
+    color: white;
+    padding: 10px 0;
+    position: fixed;
+    width: 100%;
+    top: 0;
+    z-index: 1000;
+  }
+  
+  nav {
+    text-align: center;
+  }
+  
+  nav ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  
+  nav ul li {
+    display: inline-block;
+  }
+  
+  nav ul li a {
+    text-decoration: none;
+    color: white;
+    padding: 10px 20px;
+    display: inline-block;
+  }
+  
+  nav ul li a:hover {
+    background-color: #575757;
+  }
+  
+
+  body {
+    padding-top: 50px;
+  }
+
+/* Grundläggande styling för alla formulär */
+form {
+    width: 300px;
+    margin: 50px auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Gemensam styling för alla inputfält i formulären */
+form input[type="text"],
+form input[type="email"],
+form input[type="password"] {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+}
+
+/* Styling för submit-knappar i båda formulären */
+form button {
+    width: 100%;
+    padding: 10px;
+    background-color: #333;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+form button:hover {
+    background-color: #575757;
+}
+
+/* Specifik styling för loginform (om du vill ge något extra för login) */
+#loginform {
+    background-color: #f9f9f9;
+}
+
+/* Specifik styling för registerform (om du vill ge något extra för register) */
+#registerform {
+    background-color: #f0f0f0;
+}
+
+/* Styling för "Don't have an account?" på login */
+#registernew {
+    text-align: center;
+    font-size: 14px;
+}
+
+#registernew a {
+    color: #333;
+    text-decoration: none;
+}
+
+#registernew a:hover {
+    text-decoration: underline;
+}
+  
+/* Footer-styling */
+footer {
+background-color: #333;
+color: white;
+text-align: center;
+padding: 10px 0;
+position: relative;
+bottom: 0;
+width: 100%;
+}
+  

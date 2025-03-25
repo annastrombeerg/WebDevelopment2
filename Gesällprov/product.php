@@ -1,17 +1,27 @@
 <?php
-//Anslut till databasen
+session_start();
 $conn = new mysqli("localhost", "root", "", "E_Commerce_db");
 
 $sql = "SELECT * FROM products";
 $result = $conn->query($sql);
 
-while ($product = $result->fetch_assoc()) {
-    echo "<div>";
-    echo "<h3>" . $product["name"] . "</h3>";
-    echo "<p>" . $product["description"] . "</p>";
-    echo "<p>Price: " . $product["price"] . " kr</p>";
-    echo "<img src='" . $product["image"] . "' alt='" . $product["name"] . "'>";
-    echo "<a href='add_cart.php?product_id=" . $product["id"] . "'>Add to cart</a>";
-    echo "</div>";
+//Kontrollera om vi har några resultat
+if ($result->num_rows > 0) {
+    //Loop igenom alla produkter och visa dem
+    while ($product = $result->fetch_assoc()) {
+        echo "<div class='product'>";
+        echo "<img src='images/" . $product['image'] . "' alt='" . $product['name'] . "'>";
+        echo "<h3>" . $product['name'] . "</h3>";
+        echo "<p>" . $product['description'] . "</p>";
+        echo "<p>Price: " . $product['price'] . " kr</p>";
+        echo "<a href='add_cart.php?product_id=" . $product['id'] . "'>Add to cart</a>";
+        echo "</div>";
+    }
+} else {
+    echo "<p>No products found.</p>";
 }
+
+// Stäng anslutningen
+$conn->close();
+
 ?>

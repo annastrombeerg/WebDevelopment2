@@ -2,7 +2,7 @@
 session_start();
 $conn = new mysqli("localhost", "root", "", "E_Commerce_db");
 
-echo "<h1>Your cart</h1>";
+echo "<h1>Your Cart</h1>";
 
 if (isset($_SESSION['cart'])) {
     $total = 0;
@@ -14,7 +14,9 @@ if (isset($_SESSION['cart'])) {
         echo "<p>" . $product['name'] . " - Quantity: $quantity - Price: " . $product['price'] * $quantity . " kr</p>";
     }
     echo "<p>Total: $total kr</p>";
+    echo "<a href='pay.php'>Go to Checkout</a>";
 } else {
     echo "<p>Your cart is empty.</p>";
 }
+$conn->close();
 ?>

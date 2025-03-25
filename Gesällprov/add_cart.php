@@ -18,5 +18,6 @@ if (isset($_GET['product_id'])) {
 
     echo "Product successfully added to cart!";
     header("Location: cart.php");
+    exit();
 }
 ?>

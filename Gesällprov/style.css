@@ -3,10 +3,10 @@ body {
     font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
-  }
+}
   
-  /* Styling för header och navigationsbar */
-  header {
+/* Styling för header och navigationsbar */
+header {
     background-color: #333;
     color: white;
     padding: 10px 0;
@@ -14,37 +14,37 @@ body {
     width: 100%;
     top: 0;
     z-index: 1000;
-  }
-  
-  nav {
+}
+
+nav {
     text-align: center;
-  }
+}
   
-  nav ul {
+nav ul {
     list-style: none;
     margin: 0;
     padding: 0;
-  }
+}
   
-  nav ul li {
+nav ul li {
     display: inline-block;
-  }
+}
   
-  nav ul li a {
+nav ul li a {
     text-decoration: none;
     color: white;
     padding: 10px 20px;
     display: inline-block;
-  }
+}
   
-  nav ul li a:hover {
+nav ul li a:hover {
     background-color: #575757;
-  }
+}
   
 
-  body {
+body {
     padding-top: 50px;
-  }
+}
 
 /* Grundläggande styling för alla formulär */
 form {
@@ -68,7 +68,6 @@ form input[type="password"] {
     box-sizing: border-box;
 }
 
-/* Styling för submit-knappar i båda formulären */
 form button {
     width: 100%;
     padding: 10px;
@@ -83,17 +82,14 @@ form button:hover {
     background-color: #575757;
 }
 
-/* Specifik styling för loginform (om du vill ge något extra för login) */
 #loginform {
     background-color: #f9f9f9;
 }
 
-/* Specifik styling för registerform (om du vill ge något extra för register) */
 #registerform {
     background-color: #f0f0f0;
 }
 
-/* Styling för "Don't have an account?" på login */
 #registernew {
     text-align: center;
     font-size: 14px;
@@ -108,20 +104,14 @@ form button:hover {
     text-decoration: underline;
 }
 
-/* Styling för produktkontainern */
-.product-container {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 20px;
-    margin: 20px;
-}
-
+/* Styling för produkterna */
 .product {
+    width: 50%;
     border: 1px solid #ddd;
     padding: 10px;
-    width: 200px;
-    text-align: center;
+    text-align: left;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    box-sizing: border-box;
 }
 
 .product img {
@@ -166,12 +156,11 @@ form button:hover {
   
 /* Footer-styling */
 footer {
-background-color: #333;
-color: white;
-text-align: center;
-padding: 10px 0;
-position: relative;
-bottom: 0;
-width: 100%;
+    background-color: #333;
+    color: white;
+    text-align: center;
+    padding: 10px 0;
+    position: relative;
+    bottom: 0;
+    width: 100%;
 }
-  

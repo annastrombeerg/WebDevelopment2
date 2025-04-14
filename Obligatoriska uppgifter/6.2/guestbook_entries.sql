@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Värd: localhost
--- Tid vid skapande: 11 mars 2025 kl 18:06
+-- Tid vid skapande: 14 apr 2025 kl 14:28
 -- Serverversion: 10.4.28-MariaDB
 -- PHP-version: 8.2.4
 
@@ -50,7 +50,11 @@ INSERT INTO `guestbook_entries` (`id`, `name`, `email`, `homepage`, `comment`, `
 (14, 'Theo', 'theo@email.com', 'theoswebsite.se', 'Im Theo!', '2025-03-11 16:56:26'),
 (15, 'Develop', 'developer@now.com', 'idevelop.com', 'Im a developer!', '2025-03-11 16:58:57'),
 (16, 'Develop', 'developer@now.com', 'idevelop.com', 'Im a developer!', '2025-03-11 17:00:43'),
-(17, 'Liam', 'liam@hotmail.com', 'liam.now', 'Goodday!!', '2025-03-11 17:01:09');
+(17, 'Liam', 'liam@hotmail.com', 'liam.now', 'Goodday!!', '2025-03-11 17:01:09'),
+(18, 'Flower', 'flower@now.se', 'flowerpower.com', 'MORE FLOWERS!', '2025-03-12 13:25:59'),
+(19, 'flowlove', 'flowerlover@now.com', 'loveflowers.com', 'I lover flowers!!', '2025-03-12 13:30:39'),
+(20, 'Pinky', 'pink@flower.com', 'pinkflowers.now', 'I sell Pink flowers!!', '2025-03-12 13:31:44'),
+(21, 'Elin', 'elin@hm.se', 'hm.se', 'Hej, jag älskar HM!', '2025-04-14 12:21:16');
 
 --
 -- Index för dumpade tabeller
@@ -70,7 +74,7 @@ ALTER TABLE `guestbook_entries`
 -- AUTO_INCREMENT för tabell `guestbook_entries`
 --
 ALTER TABLE `guestbook_entries`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

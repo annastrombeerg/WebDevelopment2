@@ -1,88 +1,96 @@
 <?php
 /**
- * Detta PHP-skript skapar en gästbok där användare kan lämna sina namn, e-postadresser, hemsidor och kommentarer. 
+ * Detta PHP-skript skapar en gästbok där användare kan lämna sina namn, e-postadresser, hemsidor och kommentarer.
  * Inläggen lagras i en MySQL-databas och visas på webbsidan. 
+ * Skyddar mot XSS och SQL-injektion genom att använda prepared statements och rensa indata.
  */
 
-error_reporting(E_ALL);
+//Visar felmeddelanden
 ini_set('display_errors', 1);
+error_reporting(E_ALL);
 
 //Konfiguration för databasanslutning
-$servername = "localhost"; //server
+$servername = "localhost";
 $username = "root";
 $password = "";
-$dbname = "guestbook_db"; //använd rätt databasnamn
+$dbname = "guestbook_db";
 
-//Skapa en anslutning
-$conn = new mysqli($servername, $username, $password, $dbname);
+try {
+    //Skapa en anslutning till databasen
+    $conn = new mysqli($servername, $username, $password, $dbname);
+    if ($conn->connect_error) {
+        throw new Exception("Connection failed: " . $conn->connect_error);
+    }
 
-//Kontrollera om anslutningen är lyckad
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-}
+    //Funktion för att rensa data och förhindra HTML och SQL-injektion
+    function clean_input($data) {
+        $data = trim($data);
+        $data = stripslashes($data);
+        $data = strip_tags($data);
+        return $data;
+    }
 
-//Funktion för att rensa data och förhindra HTML och SQL-injektion
-function clean_input($data) {
-    $data = trim($data);
-    $data = stripslashes($data);
-    $data = htmlspecialchars($data);
-    return $data;
-}
+    //Variabler för formulärdata
+    $name = $email = $homepage = $comment = "";
 
-//Variabler för formulärdata
-$name = $email = $homepage = $comment = "";
+    //Hantera formulärinlämning
+    if ($_SERVER["REQUEST_METHOD"] == "POST") {
+        //Rensa och hämta data från formuläret
+        $name = clean_input($_POST["name"]);
+        $email = clean_input($_POST["email"]);
+        $homepage = clean_input($_POST["homepage"]);
+        $comment = clean_input($_POST["comment"]);
+        $created_at = date('Y-m-d H:i:s');
 
-//Kontrollera om formuläret är skickat
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    //Rensa och hämta data från formuläret
-    $name = clean_input($_POST["name"]);
-    $email = clean_input($_POST["email"]);
-    $homepage = clean_input($_POST["homepage"]);
-    $comment = clean_input($_POST["comment"]);
+        //Förbered SQL-fråga för att lägga till inlägg i databasen
+        $stmt = $conn->prepare("INSERT INTO guestbook_entries (name, email, homepage, comment) VALUES (?, ?, ?, ?)");
+        $stmt->bind_param("ssss", $name, $email, $homepage, $comment);
 
-    //Förbered SQL-fråga för att lägga till inlägg i databasen
-    $stmt = $conn->prepare("INSERT INTO guestbook_entries (name, email, homepage, comment) VALUES (?, ?, ?, ?)");
-    $stmt->bind_param("ssss", $name, $email, $homepage, $comment);
+        //Exekvera frågan och kontrollera om den lyckades
+        if ($stmt->execute()) {
+            $name = $email = $homepage = $comment = "";
+        } else {
+            throw new Exception("Fel vid inlämning: " . $stmt->error);
+        }
+        $stmt->close();
+    }
 
-    //Exekvera frågan och kontrollera om den lyckades
-    if ($stmt->execute()) {
-        //Visa ett tack-meddelande och visa formuläret igen
-        echo "<p>Tack för ditt inlägg!</p>";
-        $name = $email = $homepage = $comment = "";
+    //Hämta alla inlägg från databasen
+    $sql = "SELECT * FROM guestbook_entries ORDER BY created_at DESC";
+    $result = $conn->query($sql);
+
+    //Ladda HTML
+    $template = file_get_contents("index.html");
+
+    //Förbered inlägg
+    $output = "";
+    if ($result->num_rows > 0) {
+        while ($row = $result->fetch_assoc()) {
+            $block = <<<EOD
+            <p><strong>Inlägg:</strong> {$row['id']}</p>
+            <p><strong>Tid:</strong> {$row['created_at']}<br>
+            <strong>Från:</strong> <a href="{$row['homepage']}">{$row['name']}</a><br>
+            <strong>E-post:</strong> <a href="mailto:{$row['email']}">{$row['email']}</a></p>
+            <p><strong>Kommentar:</strong> {$row['comment']}</p>
+            <hr>
+            EOD;
+            $output .= $block;
+        }
     } else {
-        echo "Fel vid inlämning: " . $stmt->error;
+        $output = "<p>Inga inlägg än.</p>";
     }
 
-    //Stäng förberedelsen
-    $stmt->close();
-}
+    //Ersätt placeholder med inlägg i mallen
+    $result = preg_replace('/<!--===entries===-->.*<!--===entries===-->/s', "<!--===entries===-->\n" . $output . "\n<!--===entries===-->", $template);
 
-//Hämta och visa alla inlägg
-$sql = "SELECT * FROM guestbook_entries ORDER BY created_at DESC";
-$result = $conn->query($sql);
+    //Skicka HTML till användaren
+    echo $result;
 
-echo "<form method='post' action=''>";
-echo "<p><input type='text' name='name' placeholder='Namn' value='" . $name . "'></p>";
-echo "<p><input type='text' name='email' placeholder='Email' value='" . $email . "'></p>";
-echo "<p><input type='text' name='homepage' placeholder='Hemsida' value='" . $homepage . "'></p>";
-echo "<p><textarea name='comment' rows='5' cols='30' placeholder='Kommentar'>" . $comment . "</textarea></p>";
-echo "<p><input type='submit' name='push_button' value='Sänd'></p>";
-echo "</form>";
-
-if ($result->num_rows > 0) {
-    //Visa varje inlägg
-    while($row = $result->fetch_assoc()) {
-        echo "<p><strong>Inlägg:</strong> " . $row['id'] . "</p>";
-        echo "<p><strong>Tid:</strong> " . $row['created_at'] . "<br>";
-        echo "<strong>Från:</strong> <a href='" . $row['homepage'] . "'>" . $row['name'] . "</a><br>";
-        echo "<strong>E-post:</strong> <a href='mailto:" . $row['email'] . "'>" . $row['email'] . "</a></p>";
-        echo "<p><strong>Kommentar:</strong> " . nl2br($row['comment']) . "</p>";
-        echo "<hr>";
+} catch (Exception $e) {
+    echo "Fel: " . $e->getMessage();
+} finally {
+    if (isset($conn)) {
+        $conn->close();
     }
-} else {
-    echo "Inga inlägg än.";
 }
-
-//Stäng anslutningen
-$conn->close();
 ?>

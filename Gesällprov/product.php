@@ -7,11 +7,11 @@
 //Starta sessionen
 session_start();
 
-/* if (!isset($_SESSION['user_id'])) {
+if (!isset($_SESSION['user_id'])) {
     // Om inte inloggad, skicka till login
     header("Location: login.html?msg=not_logged_in");
     exit;
-} */
+}
 
 //Databasanslutning
 $servername = "localhost";

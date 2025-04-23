@@ -2,21 +2,40 @@
 session_start();
 $conn = new mysqli("localhost", "root", "", "E_Commerce_db");
 
-echo "<h1>Your Cart</h1>";
+//Ladda HTML-mallen
+$template = file_get_contents('cart.html');
 
-if (isset($_SESSION['cart'])) {
+//Bygg kundvagnsinnehåll
+$cart_output = "";
+if (isset($_SESSION['cart']) && count($_SESSION['cart']) > 0) {
     $total = 0;
+
     foreach ($_SESSION['cart'] as $product_id => $quantity) {
-        $sql = "SELECT * FROM products WHERE id = $product_id";
-        $result = $conn->query($sql);
-        $product = $result->fetch_assoc();
-        $total += $product['price'] * $quantity;
-        echo "<p>" . $product['name'] . " - Quantity: $quantity - Price: " . $product['price'] * $quantity . " kr</p>";
+        $sql = "SELECT * FROM products WHERE id = ?";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("i", $product_id);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        
+        if ($product = $result->fetch_assoc()) {
+            $subtotal = $product['price'] * $quantity;
+            $total += $subtotal;
+            $cart_output .= "<p>{$product['name']} - Quantity: $quantity - Price: {$subtotal} kr</p>";
+        }
+        $stmt->close();
     }
-    echo "<p>Total: $total kr</p>";
-    echo "<a href='pay.php'>Go to Checkout</a>";
+
+    $cart_output .= "<p><strong>Total: $total kr</strong></p>";
+    $cart_output .= "<p><a href='pay.php' class='button'>Go to Checkout</a></p>";
 } else {
-    echo "<p>Your cart is empty.</p>";
+    $cart_output = "<p>Your cart is empty.</p>";
 }
+
+//Ersätt kundvagnssektion
+$template = str_replace('<!--===cart===-->', $cart_output, $template);
+
+//Visa hela sidan
+echo $template;
+
 $conn->close();
 ?>

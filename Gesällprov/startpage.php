@@ -4,6 +4,14 @@ session_start();
 //Ladda in HTML-mall
 $template = file_get_contents('startpage.html');
 
+$welcome_message = "Welcome to Anna E-Commerce LLC";
+if (isset($_SESSION['username'])) {
+    $name = htmlspecialchars($_SESSION['username']);
+    $welcome_message = "Welcome <strong>$name</strong> to Anna E-Commerce LLC";
+}
+$template = str_replace("<!--===welcomeuser===-->", $welcome_message, $template);
+
+
 //Meddelande om användaren precis loggade ut
 $message = "";
 if (isset($_GET['loggedout']) && $_GET['loggedout'] === "true") {

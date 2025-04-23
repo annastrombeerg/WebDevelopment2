@@ -4,7 +4,7 @@ $conn = new mysqli("localhost", "root", "", "E_Commerce_db");
 
 if (!isset($_SESSION['user_id'])) {
     //Om inte inloggad, skicka till login
-    header("Location: login.html?msg=not_logged_in");
+    header("Location: login.php?msg=not_logged_in");
     exit;
 }
 

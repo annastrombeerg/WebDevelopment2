@@ -40,6 +40,10 @@ nav ul li a {
 nav ul li a:hover {
     background-color: #575757;
 }
+
+.logout-right {
+    margin-left: auto;
+}
   
 
 body {
@@ -123,10 +127,13 @@ form button:hover {
 
 .product img {
     width: 100%;
+    max-width: 400px;
     height: auto;
     max-height: 300px;
     object-fit: cover;
     border-radius: 5px;
+    display: block;
+    margin: 0 auto;
 }
 
 .product h3 {

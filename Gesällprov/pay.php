@@ -1,58 +1,87 @@
 <?php
 session_start();
+$conn = new mysqli("localhost", "root", "", "E_Commerce_db");
+if ($conn->connect_error) die("Connection failed: " . $conn->connect_error);
 
 if (!isset($_SESSION['user_id'])) {
-    echo "You have to be logged in to be able to make a order!";
-    exit;
+    header("Location: login.php");
+    exit();
 }
 
-$conn = new mysqli("localhost", "root", "", "E_Commerce_db");
-
-echo "<h1>Payment</h1>";
-
-if (isset($_SESSION['cart'])) {
-    $cart = $_SESSION['cart'];
-    $cart_items = implode(',', array_keys($cart)); // Hämta alla produkt-ID:n
-    $sql = "SELECT * FROM products WHERE id IN ($cart_items)";
-    $result = $conn->query($sql);
-
-    echo "<ul>";
-    while ($row = $result->fetch_assoc()) {
-        echo "<li>" . $row['name'] . " - Quantity: " . $cart[$row['id']] . " - Price: " . $row['price'] * $cart[$row['id']] . " kr</li>";
-    }
-    echo "</ul>";
-
-    $total = 0;
-    foreach ($cart as $product_id => $quantity) {
-        $sql = "SELECT * FROM products WHERE id = $product_id";
-        $result = $conn->query($sql);
-        $product = $result->fetch_assoc();
-        $total += $product['price'] * $quantity;
-    }
-
-    echo "<p>Total amount: $total kr</p>";
-    echo "<a href='order_complete.php'>Proceed to Payment</a>";
-} else {
-    echo "Your cart is empty!";
+if (!isset($_SESSION['cart']) || count($_SESSION['cart']) === 0) {
+    echo "<p>Your cart is empty. <a href='product.php'>Go back</a></p>";
+    exit();
 }
 
-$conn->close();
+$user_id = $_SESSION['user_id'];
 
-/* //Hämta kundvagnsinnehåll och skapa en beställning i databasen.
-if (isset($_SESSION['cart'])) {
-    $total = 0;
+//Visa sammanfattning
+$summary = "";
+$total = 0;
+
+foreach ($_SESSION['cart'] as $product_id => $quantity) {
+    $stmt = $conn->prepare("SELECT name, price FROM products WHERE id = ?");
+    $stmt->bind_param("i", $product_id);
+    $stmt->execute();
+    $stmt->bind_result($name, $price);
+    $stmt->fetch();
+    $stmt->close();
+
+    $subtotal = $price * $quantity;
+    $total += $subtotal;
+
+    $summary .= <<<EOD
+    <p>{$name} — Quantity: {$quantity} — Price: {$subtotal} kr</p>
+    EOD;
+}
+
+$summary .= <<<EOD
+<p><strong>Total: {$total} kr</strong></p>
+<form method="post">
+    <button type="submit" class="button">Confirm and Pay</button>
+</form>
+EOD;
+
+//Ladda HTML-mallen och ersätt placeholder
+$template = file_get_contents("pay.html");
+
+//Visa logout om användaren är inloggad
+$logout = "";
+if (isset($_SESSION['user_id'])) {
+    $logout = '<li class="logout-right"><a href="logout.php">Logout</a></li>';
+}
+$template = str_replace("<!--===logout===-->", $logout, $template);
+$template = str_replace("<!--===summary===-->", $summary, $template);
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     foreach ($_SESSION['cart'] as $product_id => $quantity) {
-        $sql = "SELECT * FROM products WHERE id = $product_id";
-        $result = $conn->query($sql);
-        $product = $result->fetch_assoc();
-        $total += $product['price'] * $quantity;
-
-        $stmt = $conn->prepare("INSERT INTO orders (user_id, product_id, quantity) VALUES (?, ?, ?)");
-        $stmt->bind_param("iii", $_SESSION['user_id'], $product_id, $quantity);
+        $stmt = $conn->prepare("INSERT INTO orders (user_id, product_id, quantity, order_date) VALUES (?, ?, ?, NOW())");
+        $stmt->bind_param("iii", $user_id, $product_id, $quantity);
         $stmt->execute();
+        $stmt->close();
     }
-    echo "Your order has successfully been completed!";
-    //Töm kundvagnen efter beställningen
-    unset($_SESSION['cart']);
-} */
+
+    unset($_SESSION['cart']); //Töm kundvagnen
+
+    $output = <<<EOD
+    <h3>Thank you for your order!</h3>
+    <p>Your order has been placed successfully.</p>
+    <p><a href='startpage.html'>Return to homepage</a></p>
+    EOD;
+
+    $template = file_get_contents("pay.html");
+    //Visa logout om användaren är inloggad
+    $logout = "";
+    if (isset($_SESSION['user_id'])) {
+        $logout = '<li class="logout-right"><a href="logout.php">Logout</a></li>';
+    }
+    $template = str_replace("<!--===logout===-->", $logout, $template);
+    $template = str_replace("<!--===summary===-->", $output, $template);
+    echo $template;
+    $conn->close();
+    exit();
+}
+
+echo $template;
+$conn->close();
 ?>

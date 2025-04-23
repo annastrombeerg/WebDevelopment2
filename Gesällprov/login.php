@@ -5,14 +5,28 @@ if ($conn->connect_error) {
     die("Database connection failed: " . $conn->connect_error);
 }
 
+//Ladda HTML-mallen
+$template = file_get_contents('login.html');
+
+//Visa logout om användaren är inloggad
+$logout = "";
+if (isset($_SESSION['user_id'])) {
+    $logout = '<li class="logout-right"><a href="logout.php">Logout</a></li>';
+}
+$template = str_replace("<!--===logout===-->", $logout, $template);
+
 //Kontrollera om användaren redan är inloggad
 if (isset($_SESSION['user_id'])) {
-    header("Location: startpage.html"); //Redirect till startsidan om användaren är inloggad
+    header("Location: startpage.php"); //Redirect till startsidan om användaren är inloggad
     exit();
 }
 
+$message = "";
+if (isset($_GET['registered']) && $_GET['registered'] === "true") {
+    $message = "<p>Registration successful! You can now log in.</p>";
+}
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $email = trim($_POST["email"]);
+    $email = filter_var(trim($_POST["email"]), FILTER_SANITIZE_EMAIL);
     $password = $_POST["password"];
 
     $sql = "SELECT id, password FROM user WHERE email = ?";
@@ -27,16 +41,25 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         if (password_verify($password, $hashed_password)) {
             $_SESSION["user_id"] = $user_id;
-            header("Location: startpage.html");
+            header("Location: startpage.php");
             exit();
         } else {
-            $error_message = "Wrong password!";
+            $message = <<<EOD
+            <p>Wrong password!</p>
+            EOD;
         }
     } else {
-        $error_message = "User not found!";
+        $message = <<<EOD
+        <p>User not found!</p>
+        EOD;
     }
-
     $stmt->close();
 }
 $conn->close();
+
+//Ersätt placeholdern med felmeddelande (eller tom)
+$template = str_replace("<!--===loginmessage===-->", $message, $template);
+
+//Skriv ut hela sidan
+echo $template;
 ?>

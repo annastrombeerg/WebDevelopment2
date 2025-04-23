@@ -20,6 +20,12 @@ if (isset($_SESSION['user_id'])) {
 }
 $template = str_replace("<!--===logout===-->", $logout, $template);
 
+//Kontrollera om användaren redan är inloggad
+if (isset($_SESSION['user_id'])) {
+    header("Location: startpage.php?msg=already_logged_in"); //Redirect till startsidan om användaren är inloggad
+    exit();
+}
+
 $message = "";
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $username = htmlspecialchars(trim($_POST["username"]));

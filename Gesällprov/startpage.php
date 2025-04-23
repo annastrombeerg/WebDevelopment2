@@ -12,10 +12,13 @@ if (isset($_SESSION['username'])) {
 $template = str_replace("<!--===welcomeuser===-->", $welcome_message, $template);
 
 
-//Meddelande om användaren precis loggade ut
+//Meddelande om användaren precis loggade ut eller om användaren är redan inloggad
 $message = "";
 if (isset($_GET['loggedout']) && $_GET['loggedout'] === "true") {
     $message = "<p style='color: green; font-weight: bold;'>You have successfully logged out.</p>";
+}
+if (isset($_GET['msg']) && $_GET['msg'] === "already_logged_in") {
+    $message = "<p style='color: blue; font-weight: bold;'>You are already logged in!</p>";
 }
 $template = str_replace('<!--===message===-->', $message, $template);
 

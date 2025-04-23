@@ -17,7 +17,7 @@ $template = str_replace("<!--===logout===-->", $logout, $template);
 
 //Kontrollera om användaren redan är inloggad
 if (isset($_SESSION['user_id'])) {
-    header("Location: startpage.php"); //Redirect till startsidan om användaren är inloggad
+    header("Location: startpage.php?msg=already_logged_in"); //Redirect till startsidan om användaren är inloggad
     exit();
 }
 

@@ -50,6 +50,19 @@ body {
     padding-top: 50px;
 }
 
+/* Instruktionstext */
+.instruction {
+    color: rgb(54, 68, 178);
+    text-align: center;
+}
+
+.cupcake-tower {
+    display: block;
+    margin: 20px auto;
+    max-width: 200px;
+    height: auto;
+}
+
 /* Grundläggande styling för alla formulär */
 form {
     width: 300px;
@@ -111,7 +124,7 @@ form button:hover {
 /* Styling för produkterna */
 .container {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: (2, 1fr);
     gap: 20px;
     margin: 20px;
   }

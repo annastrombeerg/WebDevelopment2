@@ -7,6 +7,12 @@
 //Starta sessionen
 session_start();
 
+/* if (!isset($_SESSION['user_id'])) {
+    // Om inte inloggad, skicka till login
+    header("Location: login.html?msg=not_logged_in");
+    exit;
+} */
+
 //Databasanslutning
 $servername = "localhost";
 $username = "root";
@@ -54,15 +60,16 @@ try {
     $template = file_get_contents("product.html");
 
     //Förbered produktdata
-    $output = "";
+    $output = "<div class='container'>";
     if ($result->num_rows > 0) {
         //Loop igenom alla produkter och bygg HTML-strukturen
         while ($row = $result->fetch_assoc()) {
             $block = <<<EOD
-            <div class="product">
-            <h3>{$row['name']}</h3>
-            <p>{$row['description']}</p>
-            <p>Price: {$row['price']} kr</p>
+
+                    <div class="product">
+                        <h3>{$row['name']}</h3>
+                        <p>{$row['description']}</p>
+                        <p>Price: {$row['price']} kr</p>
             EOD;
             // Hämta bild om den finns
             $image_sql = "SELECT image FROM products WHERE id = " . $row['id'];
@@ -75,17 +82,19 @@ try {
 
             //Lägg till produkt i kundvagnen
             $block .= <<<EOD
-            <a href='add_cart.php?product_id={$row['id']}'>Add to cart</a>
-            </div>
+                <a href='add_cart.php?product_id={$row['id']}'>Add to cart</a>
+                    </div>
             EOD;
             $output .= $block;
         }
+        $output .= "
+    </div>";
     } else {
         $output = "<p>No products found.</p>";
     }
 
     //Ersätt placeholder med inlägg i mallen
-    $result = preg_replace('/<!--===entries===-->.*<!--===entries===-->/s', "<!--===entries===-->\n" . $output . "\n<!--===entries===-->", $template);
+    $result = preg_replace('/<!--===entries===-->/s', $output, $template);
 
     //Skicka HTML till användaren
     echo $result;

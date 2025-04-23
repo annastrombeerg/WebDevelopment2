@@ -4,6 +4,9 @@ body {
     margin: 0;
     padding: 0;
     background-color: rgb(255, 204, 211);
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
 }
   
 /* Styling för header och navigationsbar */
@@ -57,9 +60,10 @@ body {
 
 /* Instruktionstext */
 .instruction {
+    display: flex;
     color: black;
+    flex-direction: column;
     align-items: center;
-    margin: center;
 }
 
 .cupcake-tower {
@@ -189,18 +193,20 @@ form button:hover {
     margin-bottom: 10px;
 }
 
-.button a {
+.button {
     display: inline-block;
     margin-top: 10px;
     padding: 10px;
-    background-color: #007bff;
-    color: white;
+    background-color: rgb(255, 142, 157);
+    color: black;
     text-decoration: none;
     border-radius: 5px;
+    margin-left: 10px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
 }
   
-.button a:hover {
-    background-color: #0056b3;
+.button:hover {
+    background-color: rgb(255, 204, 211);
 }
 
   

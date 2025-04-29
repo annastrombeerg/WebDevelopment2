@@ -1,7 +1,8 @@
 <?php
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
+/**
+ * Hanterar registrering av ny kund. Tar emot namn, e-post och lösenord via formulär.
+ * Kontrollerar att e-post inte redan är registrerad. Vid lyckad registrering sparas kunden i databasen och skickas till Login-sidan.
+ */
 
 session_start();
 //Anslut till databasen
@@ -26,6 +27,7 @@ if (isset($_SESSION['user_id'])) {
     exit();
 }
 
+//Om formuläret skickats in
 $message = "";
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $username = htmlspecialchars(trim($_POST["username"]));
@@ -44,6 +46,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <p>This email is already registered.</p>
         EOD;
     } else {
+        //Registrera ny kund
         $sql = "INSERT INTO user (username, email, password) VALUES (?, ?, ?)";
         $stmt = $conn->prepare($sql);
         $stmt->bind_param("sss", $username, $email, $password);
@@ -62,6 +65,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 }
 $conn->close();
 
+//Lägg till meddelande i HTML-mallen
 $template = str_replace("<!--===registermessage===-->", $message, $template);
 
 //Visa sidan

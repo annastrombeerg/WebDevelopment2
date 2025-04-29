@@ -1,4 +1,10 @@
 <?php
+/**
+ * Visar innehållet i kundens kundvagn.
+ * Hämtar produktdata från databasen, beräknar totalsumma och visar möjligheten att lägga till ett personligt meddelande.
+ * Om kundvagnen är tom visas ett meddelande om detta.
+ */
+
 session_start();
 $conn = new mysqli("localhost", "root", "", "E_Commerce_db");
 
@@ -18,18 +24,18 @@ if (isset($_SESSION['user_id'])) {
 }
 $template = str_replace("<!--===logout===-->", $logout, $template);
 
-//Bygg kundvagnsinnehåll
+//Generera kundvagnsinnehåll
 $cart_output = "";
 if (isset($_SESSION['cart']) && count($_SESSION['cart']) > 0) {
     $total = 0;
-
+    //Loopar igenom varje produkt i kundvagnen
     foreach ($_SESSION['cart'] as $product_id => $quantity) {
         $sql = "SELECT * FROM products WHERE id = ?";
         $stmt = $conn->prepare($sql);
         $stmt->bind_param("i", $product_id);
         $stmt->execute();
         $result = $stmt->get_result();
-        
+        //Om produkten finns, lägg till informationen till utskriften
         if ($product = $result->fetch_assoc()) {
             $subtotal = $product['price'] * $quantity;
             $total += $subtotal;
@@ -37,7 +43,7 @@ if (isset($_SESSION['cart']) && count($_SESSION['cart']) > 0) {
         }
         $stmt->close();
     }
-
+    //Visa totalsumma och formulär för personligt meddelande
     $cart_output .= "<p><strong>Total: $total kr</strong></p>";
     $cart_output .= <<<EOD
     <form action="pay.php" method="post">
@@ -47,13 +53,11 @@ if (isset($_SESSION['cart']) && count($_SESSION['cart']) > 0) {
         <button type="submit" class="button">Go to Checkout</button>
     </form>
     EOD;
-
-    //$cart_output .= "<p><a href='pay.php' class='button'>Go to Checkout</a></p>";
 } else {
     $cart_output = "<p>Your cart is empty.</p>";
 }
 
-//Ersätt kundvagnssektion
+//Ersätt placeholder i HTML-mall med genererat innehåll
 $template = str_replace('<!--===cart===-->', $cart_output, $template);
 
 //Visa hela sidan

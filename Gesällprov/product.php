@@ -1,7 +1,8 @@
 <?php
 /**
- * Detta PHP-skript hämtar produkter från databasen och visar dem på sidan, inklusive bilddata (sparas som BLOB i db).
- * Produkterna lagras i en MySQL-databas och visas på webbsidan.
+ * Hämtar alla produkter från databasen och visar dem på sidan med tillhörande bilder.
+ * Tillåter kunden att lägga till produkter i sin kundvagn, samt att specificera antal.
+ * Bilder hämtas dynamiskt via GET-förfrågan och levereras som binärdata.
  */
 
 //Starta sessionen
@@ -87,7 +88,7 @@ try {
             $block .= "<p><img src='product.php?id=" . $row['id'] . "' alt='Bild saknas!' /></p>";
         }
 
-            //Lägg till produkt i kundvagnen
+            //Formulär för att lägga till produkt i kundvagnen
             $block .= <<<EOD
                 <form method="post" action="add_cart.php" class="add-cart-form">
                     <input type="hidden" name="product_id" value="{$row['id']}">

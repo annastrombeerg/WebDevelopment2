@@ -1,17 +1,21 @@
 <?php
+/**
+ * Visar startsidan för e-handeln. Hälsar kunden välkommen och visar eventuella meddelanden
+ * beroende på om kunden är inloggad, redan inloggad eller precis har loggat ut.
+ */
+
 session_start();
-//header("Content-Type: text/html; charset=UTF-8");
 
 //Ladda in HTML-mall
 $template = file_get_contents('startpage.html');
 
+//Sätt välkomstmeddelande beroende på om kund är inloggad
 $welcome_message = "Welcome to Anna E-Commerce LLC";
 if (isset($_SESSION['username'])) {
     $name = htmlspecialchars($_SESSION['username']);
     $welcome_message = "Welcome <strong>$name</strong> to Anna E-Commerce LLC";
 }
 $template = str_replace("<!--===welcomeuser===-->", $welcome_message, $template);
-
 
 //Meddelande om användaren precis loggade ut eller om användaren är redan inloggad
 $message = "";

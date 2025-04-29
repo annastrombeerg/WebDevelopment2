@@ -1,4 +1,10 @@
 <?php
+/**
+ * Hanterar inloggning för kund till e-handelssystemet.
+ * Kontrollerar inmatad e-post och lösenord mot databasen och loggar in kunden om uppgifterna stämmer.
+ * Visar även meddelanden vid felaktiga inloggningsförsök eller om registreringen lyckades.
+ */
+
 session_start();
 $conn = new mysqli("localhost", "root", "", "E_Commerce_db");
 if ($conn->connect_error) {
@@ -21,24 +27,26 @@ if (isset($_SESSION['user_id'])) {
     exit();
 }
 
+//Visa eventuella meddelanden
 $message = "";
 if (isset($_GET['registered']) && $_GET['registered'] === "true") {
     $message = "<p>Registration successful! You can now log in.</p>";
 }
+//Hantera formulärdata
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $email = filter_var(trim($_POST["email"]), FILTER_SANITIZE_EMAIL);
     $password = $_POST["password"];
-
+    //Hämta kundinformation från databasen baserat på e-post
     $sql = "SELECT id, username, password FROM user WHERE email = ?";
     $stmt = $conn->prepare($sql);
     $stmt->bind_param("s", $email);
     $stmt->execute();
     $stmt->store_result();
-
+    //Kontrollera om kund hittades
     if ($stmt->num_rows > 0) {
         $stmt->bind_result($user_id, $username, $hashed_password);
         $stmt->fetch();
-
+        //Verifiera lösenord
         if (password_verify($password, $hashed_password)) {
             $_SESSION["user_id"] = $user_id;
             $_SESSION["username"] = $username;

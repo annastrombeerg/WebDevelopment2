@@ -8,16 +8,25 @@ if (!isset($_SESSION['user_id'])) {
     exit();
 }
 
+//Om meddelande skickas från cart.php
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['customMessage'])) {
+    $_SESSION['customMessage'] = htmlspecialchars($_POST['customMessage']);
+}
+
 if (!isset($_SESSION['cart']) || count($_SESSION['cart']) === 0) {
     echo "<p>Your cart is empty. <a href='product.php'>Go back</a></p>";
     exit();
 }
 
 $user_id = $_SESSION['user_id'];
-
 //Visa sammanfattning
 $summary = "";
 $total = 0;
+
+//Visa meddelande om det finns
+if (isset($_SESSION['customMessage'])) {
+    $summary .= "<p><strong>Your message:</strong> \"" . $_SESSION['customMessage'] . "\"</p><hr>";
+}
 
 foreach ($_SESSION['cart'] as $product_id => $quantity) {
     $stmt = $conn->prepare("SELECT name, price FROM products WHERE id = ?");
@@ -53,15 +62,17 @@ if (isset($_SESSION['user_id'])) {
 $template = str_replace("<!--===logout===-->", $logout, $template);
 $template = str_replace("<!--===summary===-->", $summary, $template);
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && !isset($_POST['customMessage'])){
+    $customMessage = $_SESSION['customMessage'] ?? '';
     foreach ($_SESSION['cart'] as $product_id => $quantity) {
-        $stmt = $conn->prepare("INSERT INTO orders (user_id, product_id, quantity, order_date) VALUES (?, ?, ?, NOW())");
-        $stmt->bind_param("iii", $user_id, $product_id, $quantity);
+        $stmt = $conn->prepare("INSERT INTO orders (user_id, product_id, quantity, message, order_date) VALUES (?, ?, ?, ?, NOW())");
+        $stmt->bind_param("iiis", $user_id, $product_id, $quantity, $customMessage);
         $stmt->execute();
         $stmt->close();
     }
 
     unset($_SESSION['cart']); //Töm kundvagnen
+    unset($_SESSION['customMessage']);
 
     $output = <<<EOD
     <h3>Thank you for your order!</h3>

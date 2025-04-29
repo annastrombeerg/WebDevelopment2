@@ -78,18 +78,23 @@ try {
                         <p>{$row['description']}</p>
                         <p>Price: {$row['price']} kr</p>
             EOD;
-            // Hämta bild om den finns
+            //Hämta bild om den finns
             $image_sql = "SELECT image FROM products WHERE id = " . $row['id'];
             $image_result = $conn->query($image_sql);
         if ($image_result->num_rows > 0) {
             $image_row = $image_result->fetch_assoc();
-            // Lägg till bild direkt efter produktinformation
+            //Lägg till bild direkt efter produktinformation
             $block .= "<p><img src='product.php?id=" . $row['id'] . "' alt='Bild saknas!' /></p>";
         }
 
             //Lägg till produkt i kundvagnen
             $block .= <<<EOD
-                <a href='add_cart.php?product_id={$row['id']}'>Add to cart</a>
+                <form method="post" action="add_cart.php" class="add-cart-form">
+                    <input type="hidden" name="product_id" value="{$row['id']}">
+                    <label for="qty{$row['id']}">Quantity:</label>
+                    <input type="number" name="quantity" id="qty{$row['id']}" value="1" min="1" max="20" required>
+                    <button type="submit" class="button">Add to cart</button>
+                </form>
                     </div>
             EOD;
             $output .= $block;

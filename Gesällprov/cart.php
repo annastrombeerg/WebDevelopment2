@@ -39,7 +39,16 @@ if (isset($_SESSION['cart']) && count($_SESSION['cart']) > 0) {
     }
 
     $cart_output .= "<p><strong>Total: $total kr</strong></p>";
-    $cart_output .= "<p><a href='pay.php' class='button'>Go to Checkout</a></p>";
+    $cart_output .= <<<EOD
+    <form action="pay.php" method="post">
+        <label for="customMessage"><strong>Your Cupcake Message (max 3 words):</strong></label><br>
+        <input type="text" name="customMessage" id="customMessage" maxlength="50"
+               pattern="(\b\w+\b[\s]*){1,3}" placeholder="e.g. Happy Birthday Alice" required><br><br>
+        <button type="submit" class="button">Go to Checkout</button>
+    </form>
+    EOD;
+
+    //$cart_output .= "<p><a href='pay.php' class='button'>Go to Checkout</a></p>";
 } else {
     $cart_output = "<p>Your cart is empty.</p>";
 }

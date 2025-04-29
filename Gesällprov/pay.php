@@ -31,12 +31,12 @@ foreach ($_SESSION['cart'] as $product_id => $quantity) {
     $total += $subtotal;
 
     $summary .= <<<EOD
-    <p>{$name} — Quantity: {$quantity} — Price: {$subtotal} kr</p>
+    <p>{$name} - Quantity: {$quantity} - Price: {$subtotal} kr in total</p>
     EOD;
 }
 
 $summary .= <<<EOD
-<p><strong>Total: {$total} kr</strong></p>
+<p><strong>To Pay: {$total} kr</strong></p>
 <form method="post">
     <button type="submit" class="button">Confirm and Pay</button>
 </form>
@@ -66,7 +66,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $output = <<<EOD
     <h3>Thank you for your order!</h3>
     <p>Your order has been placed successfully.</p>
-    <p><a href='startpage.html'>Return to homepage</a></p>
+    <p><a href='startpage.html' class='button return'>Return to homepage</a></p>
     EOD;
 
     $template = file_get_contents("pay.html");

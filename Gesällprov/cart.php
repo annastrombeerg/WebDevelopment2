@@ -33,7 +33,7 @@ if (isset($_SESSION['cart']) && count($_SESSION['cart']) > 0) {
         if ($product = $result->fetch_assoc()) {
             $subtotal = $product['price'] * $quantity;
             $total += $subtotal;
-            $cart_output .= "<p>{$product['name']} - Quantity: $quantity - Price: {$subtotal} kr</p>";
+            $cart_output .= "<p>{$product['name']} - Quantity: $quantity - Price: {$product['price']} kr</p>";
         }
         $stmt->close();
     }

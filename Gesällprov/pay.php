@@ -30,7 +30,7 @@ $total = 0;
 
 //Visa kundens personliga meddelande om det finns
 if (isset($_SESSION['customMessage'])) {
-    $summary .= "<p><strong>Your message:</strong> \"" . $_SESSION['customMessage'] . "\"</p><hr>";
+    $summary .= "<p><strong>Your message:</strong> \"" . $_SESSION['customMessage'] . "\"</p>";
 }
 //Generera produktöversikten/summeringen
 foreach ($_SESSION['cart'] as $product_id => $quantity) {

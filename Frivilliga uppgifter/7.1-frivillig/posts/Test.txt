@@ -1,0 +1,11 @@
+== Min första bloggpost ==
+
+Välkommen till min **blogg** där jag skriver om __webbutveckling__!
+
+Här är en bild på en cupcake:
+
+[[img:images/cupcake.jpg]]
+
+Och här är en länk till en extern sida:
+
+[[link:https://www.w3schools.com|Lär dig mer på W3Schools]]

@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+    <head>
+    <meta charset="UTF-8">
+    <title>Sökmotor</title>
+    </head>
+    <body>
+        <h1>Sökmotor</h1>
+        <form method="post" action="search.php">
+            <label for="url">URL:</label><br>
+            <input type="url" id="url" name="url" placeholder="https://www.exempel.se" required size="60"><br><br>
+
+            <label for="term">Sökord:</label><br>
+            <input type="text" id="term" name="term" required><br><br>
+
+            <label for="depth">Maxdjup (1-2):</label><br>
+            <input type="number" id="depth" name="depth" value="2" min="1" max="5"><br><br>
+
+            <button type="submit">Starta sökning</button>
+        </form>
+    </body>
+</html>

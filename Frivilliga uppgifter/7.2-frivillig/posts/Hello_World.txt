@@ -1,0 +1,8 @@
+== Hello World Post ==
+Välkommen till min **andra bloggpost**!
+
+Här är en _kort introduktion_ till mitt publiceringssystem.
+
+[[img:https://upload.wikimedia.org/wikipedia/commons/4/4f/Cupcake.png]]
+
+Besök [[link:https://example.com|min hemsida]] för mer information.

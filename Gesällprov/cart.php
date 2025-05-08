@@ -40,6 +40,11 @@ if (isset($_SESSION['cart']) && count($_SESSION['cart']) > 0) {
             $subtotal = $product['price'] * $quantity;
             $total += $subtotal;
             $cart_output .= "<p>{$product['name']} - Quantity: $quantity - Price: {$product['price']} kr</p>";
+            $cart_output .= " <form action='cart.php' method='POST'>
+                                <input type='hidden' name='remove_product' value='$product_id'>
+                                <button type='submit' class='remove-button'>Remove</button>
+                              </form>";
+            $cart_output .= "</p>";
         }
         $stmt->close();
     }
@@ -56,6 +61,17 @@ if (isset($_SESSION['cart']) && count($_SESSION['cart']) > 0) {
 } else {
     $cart_output = "<p>Your cart is empty.</p>";
 }
+
+//Ta bort produkt från kundvagnen om 'remove_product' är skickad
+if (isset($_POST['remove_product'])) {
+    $remove_product_id = $_POST['remove_product'];
+    if (isset($_SESSION['cart'][$remove_product_id])) {
+        unset($_SESSION['cart'][$remove_product_id]); //Ta bort produkten
+        header("Location: cart.php"); //Ladda om sidan för att uppdatera kundvagnen
+        exit();
+    }
+}
+
 
 //Ersätt placeholder i HTML-mall med genererat innehåll
 $template = str_replace('<!--===cart===-->', $cart_output, $template);

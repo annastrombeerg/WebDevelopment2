@@ -246,6 +246,27 @@ form button:hover {
     border: 1px solid #33333383;
 }
 
+/* Toast-styling */
+.toast {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: rgb(255, 142, 157);
+    color: black;
+    padding: 30px 40px;
+    border-radius: 8px;
+    font-size: 20px;
+    opacity: 0;
+    transition: opacity 0.5s ease, bottom 0.5s ease;
+    z-index: 1000;
+}
+
+.toast.show {
+    opacity: 1;
+    top: 80px;
+}
+
 /* Styling för kundvagnen */
 .cart {
     max-width: 600px;

@@ -24,8 +24,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $_SESSION['cart'][$product_id] = $quantity;
     }
 
-    //Skicka tillbaka kunden till produktsidan
-    header("Location: product.php");
+    //Skicka tillbaka svar till JavaScript
+    echo "Product added to Cart!";
     exit;
 }
 ?>

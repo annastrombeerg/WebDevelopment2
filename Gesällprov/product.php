@@ -82,11 +82,11 @@ try {
             //Hämta bild om den finns
             $image_sql = "SELECT image FROM products WHERE id = " . $row['id'];
             $image_result = $conn->query($image_sql);
-        if ($image_result->num_rows > 0) {
-            $image_row = $image_result->fetch_assoc();
-            //Lägg till bild direkt efter produktinformation
-            $block .= "<p><img src='product.php?id=" . $row['id'] . "' alt='Bild saknas!' /></p>";
-        }
+            if ($image_result->num_rows > 0) {
+                $image_row = $image_result->fetch_assoc();
+                //Lägg till bild direkt efter produktinformation
+                $block .= "<p><img src='product.php?id=" . $row['id'] . "' alt='Bild saknas!' /></p>";
+            }
 
             //Formulär för att lägga till produkt i kundvagnen
             $block .= <<<EOD
